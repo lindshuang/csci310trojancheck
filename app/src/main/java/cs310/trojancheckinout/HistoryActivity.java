@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import androidx.annotation.NonNull;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,6 +42,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         //String timeInDate, String timeInTime, String timeOutDate, String timeOutTime, double totalTime, String buildingName
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //CollectionReference collection = db.collection("cities");
+
+        DocumentReference docRef1 = db.collection("history").document("0ashnacha@usc.edu");
+        DocumentReference docRef2 = db.collection("history").document("0nutakki@usc.edu");
+        DocumentReference docRef3 = db.collection("history").document("1huan981@usc.edu");
+        DocumentReference docRef4 = db.collection("history").document("1nutakki@usc.edu");
+
         History[] Histories = {
                 new History(time, time, time, time, totalTime, buildingName),
                 new History(time, time, time, time, totalTime, buildingName),
@@ -62,7 +71,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         String str = "test_string";
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         History new_history = new History("10:00", "12:00", "12:00", "12:00", 3.0, "Taper");
         //String history_id = Integer.toString(current_student.getHistories().size()) + current_student.getEmail();
         db.collection("history").document("1nutakki@usc.edu").set(new_history);
