@@ -13,6 +13,16 @@ public class User {
     private String studentID;
     private String profilePicture;
     private List<History> histories;
+    private boolean checked_in;
+
+
+    public User(String firstName, String lastName, String email, String password, boolean checked_in) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.checked_in = checked_in;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -77,6 +87,15 @@ public class User {
     public void setHistories(List<History> histories) {
         this.histories = histories;
     }
+
+    public boolean isChecked_in() {
+        return checked_in;
+    }
+
+    public void setChecked_in(boolean checked_in) {
+        this.checked_in = checked_in;
+    }
+
 
 
 }

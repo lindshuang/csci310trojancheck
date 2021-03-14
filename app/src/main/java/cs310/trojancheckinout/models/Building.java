@@ -5,6 +5,14 @@ import java.util.List;
 
 public class Building {
 
+    public Building(String buildingName, int maxCapacity, List<String> occupants, int currCapacity, String QRcode) {
+        this.buildingName = buildingName;
+        this.maxCapacity = maxCapacity;
+        this.occupants = occupants;
+        this.currCapacity = currCapacity;
+        this.QRcode = QRcode;
+    }
+
     public String getBuildingName() {
         return buildingName;
     }
@@ -21,11 +29,11 @@ public class Building {
         this.maxCapacity = maxCapacity;
     }
 
-    public List<User> getOccupants() {
+    public List<String> getOccupants() {
         return occupants;
     }
 
-    public void setOccupants(List<User> occupants) {
+    public void setOccupants(List<String> occupants) {
         this.occupants = occupants;
     }
 
@@ -47,7 +55,7 @@ public class Building {
 
     private String buildingName;
     private int maxCapacity;
-    private List<User> occupants;
+    private List<String> occupants;
     private int currCapacity;
     private String QRcode;
 }

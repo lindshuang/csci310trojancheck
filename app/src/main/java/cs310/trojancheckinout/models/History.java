@@ -1,22 +1,58 @@
 package cs310.trojancheckinout.models;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class History {
-    public LocalTime getTimeIn() {
-        return timeIn;
+    private String timeInDate;
+    private String timeInTime;
+    private String timeOutDate;
+    private String timeOutTime;
+    private double totalTime;
+    private String buildingName;
+
+    public History(String timeInDate, String timeInTime, String timeOutDate, String timeOutTime, double totalTime, String buildingName) {
+        this.timeInDate = timeInDate;
+        this.timeInTime = timeInTime;
+        this.timeOutDate = timeOutDate;
+        this.timeOutTime = timeOutTime;
+        this.totalTime = totalTime;
+        this.buildingName = buildingName;
     }
 
-    public void setTimeIn(LocalTime timeIn) {
-        this.timeIn = timeIn;
+    public String getTimeInDate() {
+        return timeInDate;
     }
 
-    public LocalTime getTimeOut() {
-        return timeOut;
+    public void setTimeInDate(String timeInDate) {
+        this.timeInDate = timeInDate;
     }
 
-    public void setTimeOut(LocalTime timeOut) {
-        this.timeOut = timeOut;
+    public String getTimeInTime() {
+        return timeInTime;
+    }
+
+    public void setTimeInTime(String timeInTime) {
+        this.timeInTime = timeInTime;
+    }
+
+    public String getTimeOutDate() {
+        return timeOutDate;
+    }
+
+    public void setTimeOutDate(String timeOutDate) {
+        this.timeOutDate = timeOutDate;
+    }
+
+    public String getTimeOutTime() {
+        return timeOutTime;
+    }
+
+    public void setTimeOutTime(String timeOutTime) {
+        this.timeOutTime = timeOutTime;
     }
 
     public double getTotalTime() {
@@ -34,11 +70,6 @@ public class History {
     public void setBuildingName(String buildingName) {
         this.buildingName = buildingName;
     }
-
-    private LocalTime timeIn;
-    private LocalTime timeOut;
-    private double totalTime;
-    private String buildingName;
 
 
 }
