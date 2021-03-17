@@ -33,6 +33,9 @@ import cs310.trojancheckinout.models.History;
 
 public class HistoryActivity extends AppCompatActivity {
 
+    private HistoryAdapter adapter;
+    private ArrayList<History> histories = new ArrayList<History>();
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +45,13 @@ public class HistoryActivity extends AppCompatActivity {
         final RecyclerView list = findViewById(R.id.recycler_view_histories);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<String> historyList = new ArrayList<>();
-        final ArrayList<History> histories = new ArrayList<History>();
+        //final ArrayList<History> histories = new ArrayList<History>();
 
         final String email = "nutakki@usc.edu";
+
+        adapter = new HistoryAdapter(histories);
+        list.setAdapter(adapter);
+
 
         db.collection("history").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
             @Override
@@ -59,11 +66,13 @@ public class HistoryActivity extends AppCompatActivity {
                         }
                     }
 
-                    getPersonData(db, historyList, histories);
+                    getPersonData(list, db, historyList, histories);
+                    adapter.notifyDataSetChanged();
                     System.out.println("HISTORY: " + histories.toString());
+                    Log.d("size after inserting all", "SIZE: " + histories.size());
 
-                    HistoryAdapter adapter = new HistoryAdapter(histories);
-                    list.setAdapter(adapter);
+//                    HistoryAdapter adapter = new HistoryAdapter(histories);
+//                    list.setAdapter(adapter);
 
                     Log.d("document", "history list: " + historyList.toString());
 
@@ -76,7 +85,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    void getPersonData(FirebaseFirestore db, ArrayList<String> historyList, final ArrayList<History> histories){
+    void getPersonData(RecyclerView list, FirebaseFirestore db, ArrayList<String> historyList, final ArrayList<History> histories){
 
         for (int i = 0; i < historyList.size(); i++){
             DocumentReference docIdRef = db.collection("history").document(historyList.get(i));
@@ -99,9 +108,9 @@ public class HistoryActivity extends AppCompatActivity {
 
                         History new_history = new History(last_DateIn, last_timeIn, last_DateOut, last_timeOut, time_elapsed, buildingName);
                         histories.add(new_history);
+                        Log.d("size", "SIZE: " + histories.size());
+                        adapter.notifyDataSetChanged();
 
-//                        HistoryAdapter adapter = new HistoryAdapter(histories);
-//                        list.setAdapter(adapter);
 
                         if (!document.exists()) {
                             Log.d("document", "Document does not exist!");
@@ -113,7 +122,8 @@ public class HistoryActivity extends AppCompatActivity {
                     }
                 }
             });
-        }//end for
+        }//end
+        adapter.notifyDataSetChanged();
     }
 
 
