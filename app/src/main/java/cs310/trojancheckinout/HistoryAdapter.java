@@ -10,21 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import cs310.trojancheckinout.models.History;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ProjectViewHolder> {
 
-    private History[] histories; //thing that we are adapting
+    //private History[] histories; //thing that we are adapting
+    private ArrayList<History> histories;
 
     //constructor
-    public HistoryAdapter(History[] histories) {
+    public HistoryAdapter(ArrayList<History> histories) {
         this.histories = histories;
     }
 
     @Override //called first to determine how many items our adapter is dealing with
     public int getItemCount() { //return an item for every one of our projects
-        return histories.length;
+        return histories.size();
     }
 
     @NonNull
@@ -36,25 +38,27 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ProjectV
 
     @Override //as each item comes in and out of focus, this method is called
     public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
-        holder.bind(histories[position]); //pass in an individual project
+        holder.bind(histories.get(position)); //pass in an individual project
     }
 
 
     static class ProjectViewHolder extends RecyclerView.ViewHolder{ //set individual item layout
 
-        private ImageView appImage;
-        private TextView appTitle;
-        private TextView appDescription;
+//        private ImageView appImage;
+//        private TextView appTitle;
+//        private TextView appDescription;
 
         private TextView appTimeIn;
         private TextView appTimeOut;
         private TextView appTotalTime;
         private TextView appBuildingName;
+        private TextView appDate;
 
         public ProjectViewHolder(@NonNull View itemView) {
             super(itemView);
 
             appTimeIn = itemView.findViewById(R.id.text_view_time_in);
+            appDate = itemView.findViewById(R.id.text_view_date);
             appTimeOut = itemView.findViewById(R.id.text_view_time_out);
             appTotalTime = itemView.findViewById(R.id.text_view_total_time);
             appBuildingName = itemView.findViewById(R.id.text_view_building_name);
@@ -64,13 +68,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ProjectV
 
         public void bind(History History){
 
-            String timeInString = History.getTimeInTime().toString();
-            String timeOutString = History.getTimeOutTime().toString();
+            String timeInString = History.getTimeInTime();
+            String timeOutString = History.getTimeOutTime();
             String totalTimeString = String.valueOf(History.getTotalTime());
 
             appTimeIn.setText("Time in: " + timeInString);
             appTimeOut.setText("Time out: " + timeOutString);
             appTotalTime.setText("Total time: " + totalTimeString);
+            appDate.setText("Date: " + History.getTimeInDate());
             appBuildingName.setText(History.getBuildingName());
 
         }

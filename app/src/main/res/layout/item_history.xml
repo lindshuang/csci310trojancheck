@@ -22,7 +22,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/text_view_project_description"
+                android:id="@+id/text_view_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_view_building_name"

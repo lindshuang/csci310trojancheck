@@ -23,6 +23,10 @@ public class History {
         this.buildingName = buildingName;
     }
 
+    public History(){
+
+    }
+
     public String getTimeInDate() {
         return timeInDate;
     }
