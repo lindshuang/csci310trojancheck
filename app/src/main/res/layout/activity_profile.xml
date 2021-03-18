@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/card_view_header"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_view_pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:src="@drawable/pic" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/image_view_pic"
+            android:layout_toEndOf="@id/image_view_pic"
+            android:text="Lindsay Huang" />
+
+        <TextView
+            android:id="@+id/text_view_project_role"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_name"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@id/image_view_pic"
+            android:text="Student" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_profile_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/card_view_header"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email:" />
+
+        <TextView
+            android:id="@+id/text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student ID:" />
+
+        <TextView
+            android:id="@+id/text_view_major"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Major:" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout_profile_info"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_link"
+            android:layout_height="wrap_content"
+            android:hint="Link to New Picture"
+            android:inputType="textPersonName"
+            android:layout_width="fill_parent">
+        </EditText>
+
+        <Button
+            android:id="@+id/button_edit_pic"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile Picture" />
+
+        <Button
+            android:id="@+id/button_change_password"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Password" />
+
+        <Button
+            android:id="@+id/button_delete_account"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Account" />
+
+
+        <Button
+            android:id="@+id/button_logout"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

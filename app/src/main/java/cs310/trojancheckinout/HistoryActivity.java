@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import cs310.trojancheckinout.models.History;
+import cs310.trojancheckinout.models.User;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -47,7 +49,9 @@ public class HistoryActivity extends AppCompatActivity {
         final ArrayList<String> historyList = new ArrayList<>();
         //final ArrayList<History> histories = new ArrayList<History>();
 
-        final String email = "nutakki@usc.edu";
+        Intent historyIntent = getIntent();
+        User currUser = (User)historyIntent.getSerializableExtra("currUser");
+        final String email = currUser.getEmail();
 
         adapter = new HistoryAdapter(histories);
         list.setAdapter(adapter);
@@ -70,10 +74,6 @@ public class HistoryActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     System.out.println("HISTORY: " + histories.toString());
                     Log.d("size after inserting all", "SIZE: " + histories.size());
-
-//                    HistoryAdapter adapter = new HistoryAdapter(histories);
-//                    list.setAdapter(adapter);
-
                     Log.d("document", "history list: " + historyList.toString());
 
                 } else {
@@ -130,100 +130,3 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 } //end class
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        db.collection("history").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        if(!queryDocumentSnapshots.isEmpty()){
-//
-//                            List<DocumentSnapshot> docList = queryDocumentSnapshots.getDocuments();
-//
-//                            for(DocumentSnapshot d : docList){
-//                                String entry = d.getId();
-//                                entry = entry.substring(1);
-//                                if (email.equals(entry)){
-//                                    String timeInDate = d.getString("timeInDate");
-//                                    String timeInTime = d.getString("timeInTime");
-//                                    String timeOutDate = d.getString("timeOutDate");
-//                                    String timeOutTime = d.getString("timeOutTime");
-////                                    double totalTime = (double) d.get("totalTime");
-//                                    String buildingName = d.getString("buildingName");
-//                                    History new_history = new History(timeInDate, timeInTime, timeOutDate, timeOutTime, 5, buildingName);
-//                                    histories.add(new_history);
-//                                }
-//                            }
-//
-//                            HistoryAdapter adapter = new HistoryAdapter(histories);
-//                            list.setAdapter(adapter);
-//
-//                        }
-//                    }
-//                });
-
-//        db.collection("history").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        String entry = document.getId();
-//                        entry = entry.substring(1);
-//                        Log.d("document", entry);
-//                        if (email.equals(entry)){
-//                            historyList.add(entry);
-//                        }
-//                    }
-//                    Log.d("document", "history list: " + historyList.toString());
-//
-//                } else {
-//                    Log.d("document", "Failed with: ", task.getException());
-//                }
-//            }
-//        });
-
-
-
-
-//        History[] Histories = {
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName),
-//                new History(time, time, time, time, totalTime, buildingName)
-//        };
-
-
-//        History new_history = new History("10:00", "12:00", "12:00", "12:00", 3.0, "Taper");
-//        //String history_id = Integer.toString(current_student.getHistories().size()) + current_student.getEmail();
-//        db.collection("history").document("1nutakki@usc.edu").set(new_history);
-
-
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //db.collection("users").document("test_doc").set(str);
-
-//        db.
-//        db.collection("test").document("LA").set(str);
-//        DatabaseReference myRef = database.getReference("message");
-//        myRef.setValue("Hello, World!");
-//    }
-//}
