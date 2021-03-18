@@ -71,8 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
                 editProfilePic(picEditText);
             }
         });
-        //https://docs.couchbase.com/userprofile-couchbase-mobile/standalone/userprofile/android/userprofile_basic.html
-
+        
         //Log Out on Click
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
