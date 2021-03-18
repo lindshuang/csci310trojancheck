@@ -17,12 +17,15 @@ public class User implements Serializable {
     private boolean checked_in;
 
 
-    public User(String firstName, String lastName, String email, String password, boolean checked_in) {
+    public User(String firstName, String lastName, String email, String password, boolean checked_in, String occupation, String studentID, String profilePicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.checked_in = checked_in;
+        this.occupation = occupation;
+        this.studentID = studentID;
+        this.profilePicture = profilePicture;
     }
 
     public String getFirstName() {

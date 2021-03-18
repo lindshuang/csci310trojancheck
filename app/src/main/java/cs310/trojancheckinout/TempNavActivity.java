@@ -24,7 +24,7 @@ public class TempNavActivity extends AppCompatActivity {
         Button historyButton = findViewById(R.id.button_history);
 
         //create a new dummy user
-        currUser = new User("Anya", "Nutakki", "nutakki@usc.edu",  "123", true);
+        currUser = new User("Anya", "Nutakki", "nutakki@usc.edu",  "123", true, "Student", "123456789", "null");
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override

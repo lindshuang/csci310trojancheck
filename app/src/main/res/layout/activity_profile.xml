@@ -7,6 +7,8 @@
         android:id="@+id/card_view_header"
         android:layout_width="match_parent"
         android:layout_marginBottom="20dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -14,7 +16,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="24dp"
             android:src="@drawable/pic" />
 
         <TextView
@@ -23,7 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/image_view_pic"
             android:layout_toEndOf="@id/image_view_pic"
-            android:text="Lindsay Huang" />
+            android:fontFamily="sans-serif-medium"
+            android:text="Lindsay Huang"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/text_view_project_role"
@@ -32,7 +36,8 @@
             android:layout_below="@id/text_view_name"
             android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/image_view_pic"
-            android:text="Student" />
+            android:text="Student"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
@@ -49,22 +54,30 @@
             android:id="@+id/text_view_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email:" />
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="12dp"
+            android:text="Email:"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="12dp"
             android:text="Student ID:" />
 
         <TextView
             android:id="@+id/text_view_major"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="12dp"
             android:text="Major:" />
     </LinearLayout>
 
     <LinearLayout
+        android:paddingLeft="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout_profile_info"
@@ -83,20 +96,33 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Profile Picture" />
+            android:text="Edit Profile Picture"
+            android:padding="0dp"
+            android:textColor="#4D98A1"
+            android:textAlignment="viewStart"
+            android:textSize="14sp"
+            />
 
         <Button
             android:id="@+id/button_change_password"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Password" />
+            android:text="Change Password"
+            android:padding="0dp"
+            android:textSize="14sp"
+            android:textAlignment="viewStart"
+            android:textColor="#4D98A1" />
 
         <Button
             android:id="@+id/button_delete_account"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:padding="0dp"
+            android:textSize="14sp"
+            android:textColor="#4D98A1"
             android:text="Delete Account" />
 
 
@@ -105,7 +131,11 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log Out" />
+            android:text="Log Out"
+            android:padding="0dp"
+            android:textAlignment="viewStart"
+            android:textColor="#E36A6A"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

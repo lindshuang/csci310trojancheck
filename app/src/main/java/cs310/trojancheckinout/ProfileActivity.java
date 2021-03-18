@@ -57,9 +57,9 @@ public class ProfileActivity extends AppCompatActivity {
         String fullName = currUser.getFirstName() + " " + currUser.getLastName();
 
         nameView.setText(fullName);
-        emailView.setText(currUser.getEmail());
-        studentIDView.setText(currUser.getStudentID());
-        majorView.setText("Computer Science");
+        emailView.setText("Email: " + currUser.getEmail());
+        studentIDView.setText("Student ID: " + currUser.getStudentID());
+        majorView.setText("Major: " + "Computer Science");
         occupationView.setText(currUser.getOccupation());
         //also need profile click
 
@@ -71,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
                 editProfilePic(picEditText);
             }
         });
-        
+
         //Log Out on Click
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
