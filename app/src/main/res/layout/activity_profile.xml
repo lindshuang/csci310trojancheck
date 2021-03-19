@@ -83,13 +83,6 @@
         android:layout_below="@id/linear_layout_profile_info"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_link"
-            android:layout_height="wrap_content"
-            android:hint="Link to New Picture"
-            android:inputType="textPersonName"
-            android:layout_width="fill_parent">
-        </EditText>
 
         <Button
             android:id="@+id/button_edit_pic"

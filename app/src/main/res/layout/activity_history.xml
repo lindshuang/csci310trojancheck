@@ -8,7 +8,6 @@
         android:id="@+id/history_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/back"
         android:fontFamily="sans-serif-condensed-medium"
         android:paddingLeft="15dp"
         android:paddingTop="40dp"
