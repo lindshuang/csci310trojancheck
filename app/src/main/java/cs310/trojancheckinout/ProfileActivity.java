@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,9 +20,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.model.Document;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalTime;
@@ -35,82 +41,118 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private User currUser;
     private AlertDialog.Builder builder;
+    private Bundle bundle;
+    private String currEmail;
+    private DocumentSnapshot userDoc;
     ///private EditText picEditText;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //get db and bundle and current user
         db = FirebaseFirestore.getInstance();
-
+        bundle = getIntent().getExtras();
+        currEmail = bundle.getString("email");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Button editProfileButton = findViewById(R.id.button_edit_pic);
-        Button logoutButton = findViewById(R.id.button_logout);
-        Button deleteAccount = findViewById(R.id.button_delete_account);
+        //create user object since we need almost all the info
+        currEmail = "nutakki@usc.edu"; //temporary, just for testing
 
-        TextView nameView = findViewById(R.id.text_view_name);
-        TextView emailView = findViewById(R.id.text_view_email);
-        TextView studentIDView = findViewById(R.id.text_view_id);
-        TextView majorView = findViewById(R.id.text_view_major);
-        TextView occupationView = findViewById(R.id.text_view_project_role);
-        profilePicView = findViewById(R.id.image_view_pic);
-
-
-        //Sample User
-        Intent profileIntent = getIntent();
-        currUser = (User)profileIntent.getSerializableExtra("currUser");
-        String fullName = currUser.getFirstName() + " " + currUser.getLastName();
-        String profilePic = currUser.getProfilePicture(); //shorturl.at/oAFNV
-
-        nameView.setText(fullName);
-        emailView.setText("Email: " + currUser.getEmail());
-        studentIDView.setText("Student ID: " + currUser.getStudentID());
-        majorView.setText("Major: " + "Computer Science");
-        occupationView.setText(currUser.getOccupation());
-        Picasso.get().load(profilePic).into(profilePicView);
-
-        //Edit Profile On CLick
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
+        DocumentReference docIdRef = db.collection("users").document(currEmail);
+        docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View v) {
-                Log.d("Profile", "button Clicked");
-                //editProfilePic(picEditText)
-                Dialog editProfile = onCreateDialog();
-                editProfile.show();
-                //EditText picEditText = editProfile.findViewById(R.id.img_link);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                userDoc = task.getResult();
+                if (task.isSuccessful()) {
+                    //User(String firstName, String lastName, String email, String password, boolean checked_in, String occupation, String studentID, String profilePicture
+                    currUser = new User(
+                            userDoc.getString("firstName"),
+                            userDoc.getString("lastName"),
+                            userDoc.getString("email"),
+                            userDoc.getString("password"),
+                            userDoc.getBoolean("checked_in"),
+                            userDoc.getString("occupation"),
+                            userDoc.getString("studentID"),
+                            userDoc.getString("profilePicture"));
 
+                    //Buttons
+                    Button viewHistory = findViewById(R.id.button_view_history);
+                    Button editProfileButton = findViewById(R.id.button_edit_pic);
+                    Button logoutButton = findViewById(R.id.button_logout);
+                    Button deleteAccount = findViewById(R.id.button_delete_account);
+
+                    //Text Views
+                    TextView nameView = findViewById(R.id.text_view_name);
+                    TextView emailView = findViewById(R.id.text_view_email);
+                    TextView studentIDView = findViewById(R.id.text_view_id);
+                    TextView majorView = findViewById(R.id.text_view_major);
+                    TextView occupationView = findViewById(R.id.text_view_project_role);
+                    profilePicView = findViewById(R.id.image_view_pic);
+
+                    //Display Data
+                    String fullName = currUser.getFirstName() + " " + currUser.getLastName();
+                    nameView.setText(fullName);
+                    emailView.setText("Email: " + currUser.getEmail());
+                    studentIDView.setText("Student ID: " + currUser.getStudentID());
+                    majorView.setText("Major: " + "Computer Science");
+                    occupationView.setText(currUser.getOccupation());
+                    String profilePic = currUser.getProfilePicture();
+                    Picasso.get().load(profilePic).into(profilePicView);
+
+                    //Click Edit Profile Button
+                    editProfileButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d("Profile", "button Clicked");
+                            //editProfilePic(picEditText)
+                            Dialog editProfile = onCreateDialog();
+                            editProfile.show();
+                            //EditText picEditText = editProfile.findViewById(R.id.img_link);
+
+                        }
+                    });
+
+                    //Click Log Out Button
+                    logoutButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            logout();
+                        }
+                    });
+
+                    //Click Delete Account Button
+                    deleteAccount.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteAccount();
+                        }
+                    });
+
+                    //Click View History Button
+                    viewHistory.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profileActivityIntent = new Intent(ProfileActivity.this, HistoryActivity.class);
+                            profileActivityIntent.putExtra("currUser", currUser);
+                            startActivity(profileActivityIntent);
+                        }
+                    });
+                }
             }
         });
-
-        //Log Out on Click
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
-
-        //delete Account
-        deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAccount();
-            }
-        });
-
     }
 
+
+    //Log Out Button Function
     protected void logout(){
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
         intent.putExtra("email", "");
     }
 
+    //Delete Account Function
     protected void deleteAccount(){
-        Bundle bundle = getIntent().getExtras();
-        String currEmail = bundle.getString("email");
-
         db.collection("users").document(currUser.getEmail())//temp, ask Ashna about this
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -128,24 +170,39 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    //Edit Profile Picture Function
     protected void editProfilePic(String picLink){
 
-        //String picLink = picEditText.getText().toString();
         Log.d("test", picLink);
         Picasso.get().load(picLink).into(profilePicView);
         currUser.setProfilePicture(picLink);
         //https://ctcusc.com/images/headshots/ctc-lindsay.jpg
+
+        //edit profile pic link in DB
+        DocumentReference currDoc = db.collection("users").document(currEmail);
+        currDoc.update("profilePicture", picLink)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Doc", "DocumentSnapshot successfully written!");
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Doc", "Error writing document", e);
+            }
+        });
     }
 
+    //Edit Profile Pic Pop-up
     public Dialog onCreateDialog() {
         builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
         builder.setCancelable(true);
-        LayoutInflater inflater = getLayoutInflater();
+        LayoutInflater inflater = getLayoutInflater(); // Get the layout inflater
         final View view = inflater.inflate(R.layout.dialog_edit_pic, null);
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
+        // Inflate and set the layout for the dialog, pass null as the parent view because its going in the dialog layout
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {

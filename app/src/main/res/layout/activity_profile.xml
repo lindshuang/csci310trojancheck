@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:paddingBottom="12dp"
+            android:paddingBottom="14dp"
             android:text="Email:"
             android:textSize="14sp" />
 
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:paddingBottom="12dp"
+            android:paddingBottom="14dp"
             android:text="Student ID:" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:paddingBottom="12dp"
+            android:paddingBottom="14dp"
             android:text="Major:" />
     </LinearLayout>
 
@@ -82,6 +82,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout_profile_info"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_view_history"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="View History"
+            android:textAlignment="viewStart"
+            android:textColor="#5E9460"
+            android:textSize="14sp" />
 
 
         <Button
