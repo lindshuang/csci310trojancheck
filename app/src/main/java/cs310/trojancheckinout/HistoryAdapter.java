@@ -70,7 +70,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ProjectV
 
             String timeInString = History.getTimeInTime();
             String timeOutString = History.getTimeOutTime();
-            String totalTimeString = String.valueOf(History.getTotalTime());
+
+            double time_elapsed = History.getTotalTime();
+            //convert to hrs and mins
+            double m = time_elapsed % 60;
+            String mins = Double.toString(m);
+            double h = time_elapsed/60.0;
+            String hour = Double.toString(h);
+            String totalTimeString = hour + " hr " + mins + " min";
+
+            //String totalTimeString = String.valueOf(History.getTotalTime());
 
             appTimeIn.setText("Time in: " + timeInString);
             appTimeOut.setText("Time out: " + timeOutString);

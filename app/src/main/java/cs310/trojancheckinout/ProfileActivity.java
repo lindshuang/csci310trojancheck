@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               //
+                logout();
             }
         });
 
@@ -99,6 +100,11 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    protected void logout(){
+        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        intent.putExtra("email", "");
     }
 
     protected void deleteAccount(){
@@ -137,8 +143,6 @@ public class ProfileActivity extends AppCompatActivity {
         builder.setCancelable(true);
         LayoutInflater inflater = getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_edit_pic, null);
-//        final EditText picEditText = findViewById(R.id.img_link);
-//        final String picLink = "";
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -149,8 +153,10 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText picEditText = view.findViewById(R.id.img_link);
                         String picLink = picEditText.getText().toString();
+//                        while(TextUtils.isEmpty(picLink)) {
+//                            picEditText.setError("Cannot be Empty");
+//                        }
                         editProfilePic(picLink);
-//                        dialog.cancel();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

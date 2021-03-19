@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
@@ -22,7 +23,7 @@
 
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile"
+            android:label="Profile"
             android:parentActivityName=".TempNavActivity" />
         <activity
             android:name=".HistoryActivity"
