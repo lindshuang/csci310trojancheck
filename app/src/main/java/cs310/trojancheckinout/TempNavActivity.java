@@ -21,28 +21,28 @@ public class TempNavActivity extends AppCompatActivity {
         setContentView(R.layout.activity_temp_nav);
 
         Button profileButton = findViewById(R.id.button_profile);
-        Button historyButton = findViewById(R.id.button_history);
+        //Button historyButton = findViewById(R.id.button_history);
 
         //create a new dummy user
-        currUser = new User("Anya", "Nutakki", "nutakki@usc.edu",  "123", true, "Student", "123456789", "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg");
+        //currUser = new User("Anya", "Nutakki", "nutakki@usc.edu",  "123", true, "Student", "123456789", "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg");
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent profileActivityIntent = new Intent(TempNavActivity.this, ProfileActivity.class);
-                profileActivityIntent.putExtra("currUser", currUser);
+                profileActivityIntent.putExtra("email", "nutakki@usc.edu");
                 startActivity(profileActivityIntent);
             }
         });
 
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent historyActivityIntent = new Intent(TempNavActivity.this, HistoryActivity.class);
-                historyActivityIntent.putExtra("currUser", currUser);
-                startActivity(historyActivityIntent);
-            }
-        });
+//        historyButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent historyActivityIntent = new Intent(TempNavActivity.this, HistoryActivity.class);
+//                //historyActivityIntent.putExtra("currUser", currUser);
+//                startActivity(historyActivityIntent);
+//            }
+//        });
 
     }
 

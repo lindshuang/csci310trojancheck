@@ -37,6 +37,12 @@ public class HistoryActivity extends AppCompatActivity {
 
     private HistoryAdapter adapter;
     private ArrayList<History> histories = new ArrayList<History>();
+    private ArrayList<String> historyList;
+    private FirebaseFirestore db;
+    private RecyclerView list;
+    private Bundle bundle;
+    private String currEmail;
+    private DocumentSnapshot userDoc;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -44,45 +50,51 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        final RecyclerView list = findViewById(R.id.recycler_view_histories);
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final ArrayList<String> historyList = new ArrayList<>();
-        //final ArrayList<History> histories = new ArrayList<History>();
-
-        Intent historyIntent = getIntent();
-        User currUser = (User)historyIntent.getSerializableExtra("currUser");
-        final String email = currUser.getEmail();
-
+        list = findViewById(R.id.recycler_view_histories);
+        db = FirebaseFirestore.getInstance();
+        historyList = new ArrayList<>();
         adapter = new HistoryAdapter(histories);
         list.setAdapter(adapter);
 
+        //get user email
+        Intent historyIntent = getIntent();
+        bundle = getIntent().getExtras();
+        currEmail = bundle.getString("email");
 
-        db.collection("history").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+        DocumentReference docIdRef = db.collection("users").document(currEmail);
+        docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String entry = document.getId();
-                        String entry_temp = entry.substring(1);
-                        Log.d("document", entry_temp);
-                        if (email.equals(entry_temp)){
-                            historyList.add(entry);
+                    db.collection("history").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String entry = document.getId();
+                                    String entry_temp = entry.substring(1);
+                                    Log.d("document", entry_temp);
+                                    if (currEmail.equals(entry_temp)){
+                                        historyList.add(entry);
+                                    }
+                                }
+
+                                getPersonData(list, db, historyList, histories);
+                                adapter.notifyDataSetChanged();
+                                System.out.println("HISTORY: " + histories.toString());
+                                Log.d("size after inserting all", "SIZE: " + histories.size());
+                                Log.d("document", "history list: " + historyList.toString());
+
+                            } else {
+                                Log.d("document", "Failed with: ", task.getException());
+                            }
                         }
-                    }
-
-                    getPersonData(list, db, historyList, histories);
-                    adapter.notifyDataSetChanged();
-                    System.out.println("HISTORY: " + histories.toString());
-                    Log.d("size after inserting all", "SIZE: " + histories.size());
-                    Log.d("document", "history list: " + historyList.toString());
-
+                    });
                 } else {
                     Log.d("document", "Failed with: ", task.getException());
                 }
             }
         });
-
-
     }
 
     void getPersonData(RecyclerView list, FirebaseFirestore db, ArrayList<String> historyList, final ArrayList<History> histories){
@@ -125,8 +137,4 @@ public class HistoryActivity extends AppCompatActivity {
         }//end
         adapter.notifyDataSetChanged();
     }
-
-
-
-
 } //end class

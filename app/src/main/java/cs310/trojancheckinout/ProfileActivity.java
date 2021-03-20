@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,10 +25,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.model.Document;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalTime;
@@ -43,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
     private Bundle bundle;
     private String currEmail;
+    private String picLink;
     private DocumentSnapshot userDoc;
     ///private EditText picEditText;
 
@@ -53,12 +58,12 @@ public class ProfileActivity extends AppCompatActivity {
         //get db and bundle and current user
         db = FirebaseFirestore.getInstance();
         bundle = getIntent().getExtras();
-        currEmail = bundle.getString("email");
+        currEmail = bundle.getString("email"); //uncomment when you pass in bundle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         //create user object since we need almost all the info
-        currEmail = "nutakki@usc.edu"; //temporary, just for testing
+        //currEmail = "nutakki@usc.edu"; //temporary, just for testing
 
         DocumentReference docIdRef = db.collection("users").document(currEmail);
         docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -101,16 +106,81 @@ public class ProfileActivity extends AppCompatActivity {
                     String profilePic = currUser.getProfilePicture();
                     Picasso.get().load(profilePic).into(profilePicView);
 
+                    //Dialog for Picture Link
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this)
+                            .setPositiveButton("OK", null);
+                    final EditText input = new EditText(ProfileActivity.this);
+                    builder.setTitle("Enter Link to Profile Picture");
+                    builder.setView(input);
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    final AlertDialog editLinkDialog = builder.create();
+
+                    //Override so we don't submit on invalid input
+                    editLinkDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialogInterface) {
+
+                            Button button = ((AlertDialog) editLinkDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                            button.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+                                    picLink = input.getText().toString();
+                                    picLink = picLink.replaceAll("\\s+","");
+                                    Log.d("document", "Link:(" + picLink + ")");
+                                    if(TextUtils.isEmpty(picLink)){
+                                        input.setError("No Link Provided");
+                                    }else{
+                                        //editProfilePic();
+                                        Log.d("test", picLink);
+                                        Picasso.get().load(picLink).into(profilePicView, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                DocumentReference currDoc = db.collection("users").document(currEmail);
+                                                currDoc.update("profilePicture", picLink)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Log.d("Doc", "DocumentSnapshot successfully written!");
+                                                                editLinkDialog.dismiss();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w("Doc", "Error writing document", e);
+                                                            }
+                                                        });
+                                                //edit profile pic link in D
+                                            }
+                                            @Override
+                                            public void onError(Exception e) {
+                                                //Picasso.get().load("https://raw.githubusercontent.com/lindshuang/image-store/main/error_profile_pic.png").into(profilePicView);
+                                                input.setError("Invalid Link");
+                                            }
+                                        });
+                                        //editLinkDialog.dismiss();
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+
+
                     //Click Edit Profile Button
                     editProfileButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Log.d("Profile", "button Clicked");
                             //editProfilePic(picEditText)
-                            Dialog editProfile = onCreateDialog();
-                            editProfile.show();
-                            //EditText picEditText = editProfile.findViewById(R.id.img_link);
-
+                            editLinkDialog.show();
                         }
                     });
 
@@ -135,7 +205,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent profileActivityIntent = new Intent(ProfileActivity.this, HistoryActivity.class);
-                            profileActivityIntent.putExtra("currUser", currUser);
+                            profileActivityIntent.putExtra("email", currEmail);
                             startActivity(profileActivityIntent);
                         }
                     });
@@ -171,56 +241,65 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Edit Profile Picture Function
-    protected void editProfilePic(String picLink){
+    protected void editProfilePic(){
 
         Log.d("test", picLink);
-        Picasso.get().load(picLink).into(profilePicView);
-        currUser.setProfilePicture(picLink);
-        //https://ctcusc.com/images/headshots/ctc-lindsay.jpg
-
-        //edit profile pic link in DB
-        DocumentReference currDoc = db.collection("users").document(currEmail);
-        currDoc.update("profilePicture", picLink)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
+        Picasso.get().load(picLink).into(profilePicView, new Callback() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("Doc", "DocumentSnapshot successfully written!");
+            public void onSuccess() { DocumentReference currDoc = db.collection("users").document(currEmail);
+                currDoc.update("profilePicture", picLink)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Doc", "DocumentSnapshot successfully written!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Doc", "Error writing document", e);
+                            }
+                        });
+                //edit profile pic link in D
             }
-        })
-        .addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("Doc", "Error writing document", e);
+            public void onError(Exception e) {
+                Picasso.get().load("https://raw.githubusercontent.com/lindshuang/image-store/main/error_profile_pic.png").into(profilePicView);
             }
         });
+
+        //https://ctcusc.com/images/headshots/ctc-lindsay.jpg
     }
 
     //Edit Profile Pic Pop-up
-    public Dialog onCreateDialog() {
-        builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        LayoutInflater inflater = getLayoutInflater(); // Get the layout inflater
-        final View view = inflater.inflate(R.layout.dialog_edit_pic, null);
-
-        // Inflate and set the layout for the dialog, pass null as the parent view because its going in the dialog layout
-        builder.setView(view)
-                // Add action buttons
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText picEditText = view.findViewById(R.id.img_link);
-                        String picLink = picEditText.getText().toString();
-//                        while(TextUtils.isEmpty(picLink)) {
-//                            picEditText.setError("Cannot be Empty");
+//    public AlertDialog onCreateDialog() {
+//        builder = new AlertDialog.Builder(this);
+//        LayoutInflater inflater = getLayoutInflater(); // Get the layout inflater
+//        final View view = inflater.inflate(R.layout.dialog_edit_pic, null);
+//        final EditText picEditText = view.findViewById(R.id.img_link);
+//        final TextView error_text = view.findViewById(R.id.error_text);
+//
+//                // Inflate and set the layout for the dialog, pass null as the parent view because its going in the dialog layout
+//        builder.setView(view)
+//                // Add action buttons
+//                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        picLink = picEditText.getText().toString();
+//                        if(picLink.length() <= 0){
+//                            error_text.setVisibility(View.VISIBLE);
+//                            error_text.setText("Email Address not found");
+//                            Log.d("document", "no link!");
+//                        }else{
+//                            editProfilePic(picLink);
 //                        }
-                        editProfilePic(picLink);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        return builder.create();
-    }
+//                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        return builder.create();
+//    }
 }
