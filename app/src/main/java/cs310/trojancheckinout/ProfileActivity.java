@@ -103,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
                     studentIDView.setText("Student ID: " + currUser.getStudentID());
                     majorView.setText("Major: " + "Computer Science");
                     occupationView.setText(currUser.getOccupation());
-                    String profilePic = currUser.getProfilePicture();
+                    final String profilePic = currUser.getProfilePicture();
                     Picasso.get().load(profilePic).into(profilePicView);
 
                     //Dialog for Picture Link
@@ -131,14 +131,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View view) {
+
+                                    final String oldPicLink = profilePic;
                                     picLink = input.getText().toString();
                                     picLink = picLink.replaceAll("\\s+","");
                                     Log.d("document", "Link:(" + picLink + ")");
                                     if(TextUtils.isEmpty(picLink)){
                                         input.setError("No Link Provided");
                                     }else{
-                                        //editProfilePic();
                                         Log.d("test", picLink);
+
                                         Picasso.get().load(picLink).into(profilePicView, new Callback() {
                                             @Override
                                             public void onSuccess() {
@@ -157,22 +159,18 @@ public class ProfileActivity extends AppCompatActivity {
                                                                 Log.w("Doc", "Error writing document", e);
                                                             }
                                                         });
-                                                //edit profile pic link in D
                                             }
                                             @Override
                                             public void onError(Exception e) {
-                                                //Picasso.get().load("https://raw.githubusercontent.com/lindshuang/image-store/main/error_profile_pic.png").into(profilePicView);
                                                 input.setError("Invalid Link");
+                                                Picasso.get().load(oldPicLink).into(profilePicView);
                                             }
                                         });
-                                        //editLinkDialog.dismiss();
                                     }
                                 }
                             });
                         }
                     });
-
-
 
                     //Click Edit Profile Button
                     editProfileButton.setOnClickListener(new View.OnClickListener() {
